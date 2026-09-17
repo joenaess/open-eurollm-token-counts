@@ -1,5 +1,5 @@
-import pytest
 from src.analyze import extract_language
+
 
 def test_extract_language():
     assert extract_language("eng_Latn") == "eng_Latn"
