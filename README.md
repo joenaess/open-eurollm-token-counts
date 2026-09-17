@@ -27,6 +27,10 @@ The analysis extracts language information and categorizes the tokens from the `
 ### 4. Sources of Swedish Tokens (`swe_Latn`)
 ![Swedish Tokens by Dataset](assets/swedish_breakdown.png)
 
+### 5. Swedish Influence in Total Mix
+To visualize how small the total Swedish component is relative to the entire 15TT pretraining mix (illustrating the negligible impact of small Swedish datasets):
+![Swedish vs Rest](assets/swedish_overall_proportion.png)
+
 ## Running the Analysis
 
 The analysis script uses `polars` for fast data processing and `seaborn`/`matplotlib` for visualization.

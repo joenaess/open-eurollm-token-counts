@@ -212,6 +212,22 @@ def analyze_and_visualize(csv_path: str, assets_dir: str):
     plt.savefig(f"{assets_dir}/swedish_breakdown.png")
     plt.close()
 
+    # --- Swedish vs Rest Overall Proportion ---
+    plt.figure(figsize=(10, 3))
+    swe_percentage = (swe_total / total_budget) * 100
+    rest_percentage = 100 - swe_percentage
+
+    # Create a horizontal stacked bar
+    plt.barh(["Total Pretraining Mix (~15T Tokens)"], [swe_percentage], color="crimson", label=f"Swedish ({swe_percentage:.2f}%)")
+    plt.barh(["Total Pretraining Mix (~15T Tokens)"], [rest_percentage], left=[swe_percentage], color="lightgray", label=f"Rest of Data ({rest_percentage:.2f}%)")
+
+    plt.title("Swedish Influence in Total OpenEuroLLM Flagship Mix")
+    plt.xlabel("Percentage of Total Tokens (%)")
+    plt.legend(loc="lower right")
+    plt.tight_layout()
+    plt.savefig(f"{assets_dir}/swedish_overall_proportion.png")
+    plt.close()
+
 
 if __name__ == "__main__":
     analyze_and_visualize("counts.csv", "assets")
