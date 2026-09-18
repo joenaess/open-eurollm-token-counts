@@ -79,7 +79,7 @@ def get_source_type(dataset: str) -> str:
     return "Other Sources"
 
 
-def analyze_and_visualize(csv_path: str, assets_dir: str):
+def analyze_and_visualize(csv_path: str, assets_dir: str, title_suffix: str):
     """Load data, analyze languages and sources, and create visualizations."""
     os.makedirs(assets_dir, exist_ok=True)
     df = pl.read_csv(csv_path)
@@ -128,7 +128,7 @@ def analyze_and_visualize(csv_path: str, assets_dir: str):
         palette="viridis",
         legend=False,
     )
-    plt.title("Tokens by Language (%) - OpenEuroLLM Flagship Mix")
+    plt.title(f"Tokens by Language (%) - {title_suffix}")
     plt.xlabel("Percentage of Total Tokens (%)")
     plt.ylabel("Language / Category")
     plt.tight_layout()
@@ -152,7 +152,7 @@ def analyze_and_visualize(csv_path: str, assets_dir: str):
         startangle=140,
         colors=colors,
     )
-    plt.title("Tokens by Language (Grouped) - OpenEuroLLM Flagship Mix")
+    plt.title(f"Tokens by Language (Grouped) - {title_suffix}")
     plt.axis("equal")
     plt.tight_layout()
     plt.savefig(f"{assets_dir}/pie_chart.png")
@@ -177,7 +177,7 @@ def analyze_and_visualize(csv_path: str, assets_dir: str):
         startangle=140,
         colors=sns.color_palette("pastel"),
     )
-    plt.title("Data Sources - OpenEuroLLM Flagship Mix")
+    plt.title(f"Data Sources - {title_suffix}")
     plt.axis("equal")
     plt.tight_layout()
     plt.savefig(f"{assets_dir}/source_types_pie.png")
@@ -217,11 +217,16 @@ def analyze_and_visualize(csv_path: str, assets_dir: str):
     swe_percentage = (swe_total / total_budget) * 100
     rest_percentage = 100 - swe_percentage
 
-    # Create a horizontal stacked bar
-    plt.barh(["Total Pretraining Mix (~15T Tokens)"], [swe_percentage], color="crimson", label=f"Swedish ({swe_percentage:.2f}%)")
-    plt.barh(["Total Pretraining Mix (~15T Tokens)"], [rest_percentage], left=[swe_percentage], color="lightgray", label=f"Rest of Data ({rest_percentage:.2f}%)")
+    if "Prelude" in title_suffix:
+        total_label = "Total Pretraining Mix (~10T Tokens)"
+    else:
+        total_label = "Total Pretraining Mix (~15T Tokens)"
 
-    plt.title("Swedish Influence in Total OpenEuroLLM Flagship Mix")
+    # Create a horizontal stacked bar
+    plt.barh([total_label], [swe_percentage], color="crimson", label=f"Swedish ({swe_percentage:.2f}%)")
+    plt.barh([total_label], [rest_percentage], left=[swe_percentage], color="lightgray", label=f"Rest of Data ({rest_percentage:.2f}%)")
+
+    plt.title(f"Swedish Influence in Total {title_suffix}")
     plt.xlabel("Percentage of Total Tokens (%)")
     plt.legend(loc="lower right")
     plt.tight_layout()
@@ -230,4 +235,6 @@ def analyze_and_visualize(csv_path: str, assets_dir: str):
 
 
 if __name__ == "__main__":
-    analyze_and_visualize("counts.csv", "assets")
+    analyze_and_visualize("counts.csv", "assets/flag", "OpenEuroLLM Flagship Mix")
+    if os.path.exists("counts_prelude.csv"):
+        analyze_and_visualize("counts_prelude.csv", "assets/prelude", "OpenEuroLLM Prelude Mix")
